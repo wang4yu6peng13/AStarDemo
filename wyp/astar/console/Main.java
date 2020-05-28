@@ -2,19 +2,20 @@ package astar.console;
 
 import astar.core.*;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
-        Grids grids = new Grids();
-        grids.printGrids();
+        final Grids grids = new Grids();
+        Utils.printGrids(grids);
 
-        //定点:起点终点
-        Node startNode = new Node(5, 1);
-        Node endNode = new Node(2, 4);
+        // 起点 终点
+        final Node startNode = new Node(5, 1);
+        final Node endNode = new Node(2, 4);
+
         // 4
-        new AStar4Direction(grids, startNode, endNode).findAndPrintPaths();
+        Utils.findAndPrintPaths(new AStar4Direction(grids, startNode, endNode));
         // 8 no corner
-        new AStar8DirectionNotCrossCorner(grids, startNode, endNode).findAndPrintPaths();
+        Utils.findAndPrintPaths(new AStar8DirectionNoCrossCorner(grids, startNode, endNode));
         // 8 corner
-        new AStar8DirectionCrossCorner(grids, startNode, endNode).findAndPrintPaths();
+        Utils.findAndPrintPaths(new AStar8DirectionWithCrossCorner(grids, startNode, endNode));
     }
 }

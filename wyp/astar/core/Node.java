@@ -7,11 +7,11 @@ public class Node {
     private int H;
     private Node parent;
 
-    public Node(int x, int y) {
+    public Node(final int x, final int y) {
         this(x, y, 0, 0, null);
     }
 
-    public Node(int x, int y, int G, int H, Node parent) {
+    public Node(final int x, final int y, final int G, final int H, final Node parent) {
         this.x = x;
         this.y = y;
         this.G = G;
@@ -43,15 +43,15 @@ public class Node {
         return parent;
     }
 
-    public void setG(int g) {
+    public void setG(final int g) {
         G = g;
     }
 
-    public void setH(int h) {
+    public void setH(final int h) {
         H = h;
     }
 
-    public void setParent(Node parent) {
+    public void setParent(final Node parent) {
         this.parent = parent;
     }
 

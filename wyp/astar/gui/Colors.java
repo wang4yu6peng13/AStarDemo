@@ -2,7 +2,7 @@ package astar.gui;
 
 import javafx.scene.paint.Color;
 
-public class Colors {
+class Colors {
     static Color wallColor() {
         return Color.rgb(200, 200, 200);
     }

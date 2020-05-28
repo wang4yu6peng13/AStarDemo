@@ -13,7 +13,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 import java.util.Random;
 
-public class GridsPane extends GridPane {
+class GridsPane extends GridPane {
     private Grids grids;
     private final Rectangle[][] bg;
     private Canvas canvas;
@@ -37,8 +37,8 @@ public class GridsPane extends GridPane {
             for (int x = 0; x < grids.maps[0].length; x++) {
                 bg[y][x] = new Rectangle(30, 30);
                 bg[y][x].setFill(isWallGrid(x, y) ? Colors.wallColor() : Colors.walkColor());
-                int row = y;
-                int col = x;
+                final int row = y;
+                final int col = x;
                 bg[y][x].setOnMouseEntered(e -> {
                     if (!gridMaking) {
                         if (isNormalGrid(col, row)) {
@@ -55,7 +55,7 @@ public class GridsPane extends GridPane {
                     }
                 });
                 bg[y][x].setOnMouseClicked(e -> {
-                    MouseButton button = e.getButton();
+                    final MouseButton button = e.getButton();
                     if (!gridMaking) {
                         // 非画地图模式
                         if (!isWallGrid(col, row)) {
@@ -95,7 +95,7 @@ public class GridsPane extends GridPane {
         }
     }
 
-    boolean makeGrid(Pane pane) {
+    boolean makeGrid(final Pane pane) {
         if (!gridMaking) {
             clear(pane);
             gridMaking = true;
@@ -106,42 +106,38 @@ public class GridsPane extends GridPane {
     }
 
 
-    void start(Pane pane, AStarType type) {
+    void start(final Pane pane, final AStarType type) {
         switch (type) {
-            case CLEAR:
-                clear(pane);
-                break;
             case ASTAR_4:
                 runAndShow(pane, new AStar4Direction(grids, startNode, endNode));
                 break;
             case ASTAR_8_NO_CORNER:
-                runAndShow(pane, new AStar8DirectionNotCrossCorner(grids, startNode, endNode));
+                runAndShow(pane, new AStar8DirectionNoCrossCorner(grids, startNode, endNode));
                 break;
-            case ASTAR_8_CORNER:
-                runAndShow(pane, new AStar8DirectionCrossCorner(grids, startNode, endNode));
+            case ASTAR_8_WITH_CORNER:
+                runAndShow(pane, new AStar8DirectionWithCrossCorner(grids, startNode, endNode));
                 break;
         }
     }
 
-    private void runAndShow(Pane pane, AStar aStar) {
+    private void runAndShow(final Pane pane, final AStar aStar) {
         if (startNode == null || endNode == null) {
             alert(Alert.AlertType.ERROR, "起点或终点没有指定！！！");
             return;
         }
         clearPath(pane);
-        Node end = aStar.findPath();
-        if (end != null) {
-            List<Node> path = grids.getPaths(end);
+        final List<Node> paths = aStar.findAndGetPaths();
+        if (paths != null) {
             canvas = new Canvas(getWidth(), getHeight());
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            for (int i = 0; i < path.size() - 1; i++) {
-                Node node1 = path.get(i);
-                Node node2 = path.get(i + 1);
+            final GraphicsContext gc = canvas.getGraphicsContext2D();
+            for (int i = 0; i < paths.size() - 1; i++) {
+                final Node node1 = paths.get(i);
+                final Node node2 = paths.get(i + 1);
                 if (i != 0) {
                     bg[node1.getY()][node1.getX()].setFill(Colors.pathGridColor());
                 }
-                Rectangle rectangle1 = bg[node1.getY()][node1.getX()];
-                Rectangle rectangle2 = bg[node2.getY()][node2.getX()];
+                final Rectangle rectangle1 = bg[node1.getY()][node1.getX()];
+                final Rectangle rectangle2 = bg[node2.getY()][node2.getX()];
                 // gc.save();
                 gc.setStroke(Colors.pathLineColor());
                 gc.setLineWidth(2);                //设置线的宽度
@@ -154,7 +150,7 @@ public class GridsPane extends GridPane {
         }
     }
 
-    private void clearPath(Pane pane) {
+    private void clearPath(final Pane pane) {
         pane.getChildren().remove(canvas);
         for (int y = 0; y < grids.maps.length; y++) {
             for (int x = 0; x < grids.maps[0].length; x++) {
@@ -165,7 +161,7 @@ public class GridsPane extends GridPane {
         }
     }
 
-    private void clear(Pane pane) {
+    void clear(final Pane pane) {
         pane.getChildren().remove(canvas);
         for (int y = 0; y < grids.maps.length; y++) {
             for (int x = 0; x < grids.maps[0].length; x++) {
@@ -178,7 +174,7 @@ public class GridsPane extends GridPane {
         endNode = null;
     }
 
-    private boolean isNormalGrid(int x, int y) {
+    private boolean isNormalGrid(final int x, final int y) {
         if (startNode != null && startNode.getX() == x && startNode.getY() == y) {
             return false;
         }
@@ -191,12 +187,12 @@ public class GridsPane extends GridPane {
         return true;
     }
 
-    private boolean isWallGrid(int x, int y) {
+    private boolean isWallGrid(final int x, final int y) {
         return grids.maps[y][x] == 1;
     }
 
     private int[][] randomMaps() {
-        int[][] maps = new int[20][30];
+        final int[][] maps = new int[20][30];
         for (int y = 0; y < 20; y++) {
             for (int x = 0; x < 30; x++) {
                 maps[y][x] = new Random().nextBoolean() ? 1 : 0;
@@ -205,14 +201,14 @@ public class GridsPane extends GridPane {
         return maps;
     }
 
-    void resetMap(Pane pane) {
+    void resetMap(final Pane pane) {
         clear(pane);
         grids = new Grids(randomMaps());
         fillGrid();
     }
 
-    private void alert(Alert.AlertType alertType, String content) {
-        Alert alert = new Alert(alertType);
+    private void alert(final Alert.AlertType alertType, final String content) {
+        final Alert alert = new Alert(alertType);
         alert.setTitle("注意");
         alert.setHeaderText(null);
         alert.setContentText(content);
